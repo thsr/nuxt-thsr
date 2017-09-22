@@ -8,11 +8,6 @@
     "node": "8.1.2",
     "npm": "5.3.0"
   },
-  // "config": {
-  //   "nuxt": {
-  //     "port": "3000"
-  //   }
-  // },
   "scripts": {
     "dev": "backpack dev",
     "build": "nuxt build && backpack build",
