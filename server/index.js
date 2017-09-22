@@ -14,15 +14,8 @@ app.set('port', port)
 ==============================*/
 
 // Import API Routes
-app.use('/api', hb)
 app.use('/hb', hb)
 
-
-/*==============================
-=            static            =
-==============================*/
-
-// app.use(express.static('static'))
 
 
 /*============================

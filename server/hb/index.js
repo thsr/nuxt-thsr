@@ -1,6 +1,5 @@
 import { Router } from 'express'
 
-import users from './users'
 import search from './search'
 import igAuth from './ig-auth'
 
@@ -11,7 +10,6 @@ const router = Router()
 =            routes            =
 ==============================*/
 
-router.use(users)
 router.use(search)
 router.use(igAuth)
 
