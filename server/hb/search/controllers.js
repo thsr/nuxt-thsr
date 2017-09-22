@@ -7,7 +7,7 @@ import { hashtagCountsTwitter, hashtagCountsIg } from './modules'
 =            relatedHashtagsIg            =
 =========================================*/
 
-async function chainCallsToIgApi (searchedHashtag, numberOfApiCalls, accessToken = '4682046121.fd29eba.93c6f2aa9b0044c1b0a05deed21e82dc') {
+async function chainCallsToIgApi (searchedHashtag, numberOfApiCalls, accessToken = process.env.IG_DEFAULT_ACCESS_TOKEN) {
   let callData = [];
   let endpoint = 'https://api.instagram.com/v1/tags/' + searchedHashtag + '/media/recent?access_token=' + accessToken;
   const options = {

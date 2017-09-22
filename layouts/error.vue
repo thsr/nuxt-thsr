@@ -4,6 +4,9 @@
 
 <script>
 export default {
-  middleware: 'redirectToIndex'
+  // middleware: 'redirectToIndex'
+  beforeCreate () {
+    this.$router.push('/')
+  }
 }
 </script>
