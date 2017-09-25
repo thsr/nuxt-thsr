@@ -14,9 +14,9 @@ export default {
 </script>
 
 <style lang="sass">
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:100');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:300');
 
 html, body, pre
   font-family: "Roboto Mono", Courier, monospaced
-  font-weight: 100
+  font-weight: 300
 </style>
