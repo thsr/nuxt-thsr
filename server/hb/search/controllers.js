@@ -1,5 +1,5 @@
 import * as rp from 'request-promise'
-import { hashtagCountsTwitter, hashtagCountsIg } from './modules'
+import { twitterHashtagCounts, igHashtagCounts } from './modules'
 
 
 
@@ -8,25 +8,25 @@ import { hashtagCountsTwitter, hashtagCountsIg } from './modules'
 =========================================*/
 
 async function chainCallsToIgApi (searchedHashtag, numberOfApiCalls, accessToken = process.env.IG_DEFAULT_ACCESS_TOKEN) {
-  let callData = [];
-  let endpoint = 'https://api.instagram.com/v1/tags/' + searchedHashtag + '/media/recent?access_token=' + accessToken;
+  let callData = []
+  let endpoint = 'https://api.instagram.com/v1/tags/' + searchedHashtag + '/media/recent?access_token=' + accessToken
   const options = {
       qs: { count: 33 },
       method: 'GET',
       json: true
-    };
+    }
 
-  let i = numberOfApiCalls;
+  let i = numberOfApiCalls
 
   while (i--) {
-    let call = await rp({ uri: endpoint, ...options});
+    let call = await rp({ uri: endpoint, ...options})
 
-    callData = callData.concat(call.data);
+    callData = callData.concat(call.data)
 
     if (!call.pagination.next_url) {
-      return callData;
+      return callData
     } else {
-      endpoint = call.pagination.next_url;
+      endpoint = call.pagination.next_url
     }
   }
 
@@ -34,36 +34,56 @@ async function chainCallsToIgApi (searchedHashtag, numberOfApiCalls, accessToken
 }
 
 export function relatedHashtagsIg (req, res, next) {
-  const searchedHashtag = req.params.tag.toLowerCase(); //to lower case because we later filter out the original hastag like this
-  const re = /[^a-zA-Z0-9_ÂÃÄÀÁÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ]/;
+  const searchedHashtag = req.params.tag.toLowerCase() //to lower case because we later filter out the original hastag like this
+  const re = /[^a-zA-Z0-9_ÂÃÄÀÁÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ]/
 
   if (re.test(searchedHashtag) || searchedHashtag === '') {
     res.json( {
       searchedHashtag: searchedHashtag,
       data: []
-    });
-    return; // don't go any further if req has special chars or is blank
+    })
+
+    // don't go any further if req has special chars or is blank
+    return
   }
 
   chainCallsToIgApi(searchedHashtag, 3)
   .then( (body) => {
-    return hashtagCountsIg(body);    
+    return igHashtagCounts(body) 
   })
   .then( (r) => {
     return r
-      //.filter(o => o.count > 1) // remove all tags with less than 1 occurence
-      .sort((a, b) => b.count - a.count) // sort by count desc
-      //.map(o => {return {text: o.text};}) // return as array of text strings
-      .filter(o => o.text !== searchedHashtag); // remove original tag
+      // remove all tags with less than 1 occurence
+      //.filter(o => o.count > 1)
+
+      // sort by count desc
+      .sort((a, b) => b.count - a.count)
+
+      // remove original tag
+      .filter(o => o.text !== searchedHashtag)
+
+      //remove tags with special characters
+      .filter(o => {
+        return !re.test(o.text)
+      })
+
+      //return first 50 results
+      .slice(0, 50)
+
+      // return in the form [{text: String, count: Int}, ...etc...]
+      .map(o => {
+        return { text: o.text, count: o.count }
+      })
+
   })
   .then( (r) => {
-    return {searchedHashtag: searchedHashtag, data: r};
+    return {searchedHashtag: searchedHashtag, data: r}
   })
   .then( (r) => {
-    res.json(r);
+    res.json(r)
   })
   .catch( (e) => {
-    next(e);
+    next(e)
   });
 
 };
@@ -110,7 +130,7 @@ export function relatedHashtagsTwitter(req, res, next) {
 
   rp(options)
   .then( (body) => {
-    return hashtagCountsTwitter(body);    
+    return twitterHashtagCounts(body);    
   })
   .then( (r) => {
     return r
