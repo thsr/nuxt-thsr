@@ -21,7 +21,6 @@ router.use(igAuth)
 /*----------  500  ----------*/
 
 router.use(function (err, req, res, next) {
-  console.log(err)
   res.status(500)
   res.json(err.message)
   // res.send('API error :(')

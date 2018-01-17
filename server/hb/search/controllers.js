@@ -3,6 +3,7 @@ import { twitterHashtagCounts, igHashtagCounts } from './modules'
 
 
 
+
 /*=========================================
 =            relatedHashtagsIg            =
 =========================================*/
@@ -79,6 +80,38 @@ export function relatedHashtagsIg (req, res, next) {
   .then( (r) => {
     return {searchedHashtag: searchedHashtag, data: r}
   })
+  .then( (r) => {
+    res.json(r)
+  })
+  .catch( (e) => {
+    next(e)
+  });
+
+};
+
+
+
+/*======================================
+=            hashtag search            =
+======================================*/
+
+async function searchTagsEndpoint (searchedHashtag, accessToken = process.env.IG_DEFAULT_ACCESS_TOKEN) {
+  let endpoint = 'https://api.instagram.com/v1/tags/search?q=' + searchedHashtag + '&access_token=' + accessToken
+  const options = {
+      method: 'GET',
+      json: true
+    }
+
+  let call = await rp({ uri: endpoint, ...options})
+
+  return call.data
+}
+
+
+export function searchTagIg (req, res, next) {
+  const searchedHashtag = req.params.tag.toLowerCase()
+
+  searchTagsEndpoint(searchedHashtag)
   .then( (r) => {
     res.json(r)
   })

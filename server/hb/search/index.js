@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { relatedHashtagsIg, relatedHashtagsTwitter } from './controllers'
+import { relatedHashtagsIg, searchTagIg, relatedHashtagsTwitter } from './controllers'
 
 const router = Router()
 
@@ -22,6 +22,8 @@ router.get('/search/twitter/:tag', relatedHashtagsTwitter)
 router.get('/search/ig/:tag', relatedHashtagsIg)
 
 router.get('/search/:tag', relatedHashtagsIg)
+
+router.get('/searchtag/:tag', searchTagIg)
 
 
 export default router
