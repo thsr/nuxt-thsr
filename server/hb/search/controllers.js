@@ -1,5 +1,5 @@
 import * as rp from 'request-promise'
-import { twitterHashtagCounts, igHashtagCounts } from './modules'
+import { relatedHashtags, twitterHashtagCounts } from './modules'
 
 
 
@@ -8,74 +8,27 @@ import { twitterHashtagCounts, igHashtagCounts } from './modules'
 =            relatedHashtagsIg            =
 =========================================*/
 
-async function chainCallsToIgApi (searchedHashtag, numberOfApiCalls, accessToken = process.env.IG_DEFAULT_ACCESS_TOKEN) {
-  let callData = []
-  let endpoint = 'https://api.instagram.com/v1/tags/' + searchedHashtag + '/media/recent?access_token=' + accessToken
-  const options = {
-      qs: { count: 33 },
-      method: 'GET',
-      json: true
-    }
 
-  let i = numberOfApiCalls
 
-  while (i--) {
-    let call = await rp({ uri: endpoint, ...options})
-
-    callData = callData.concat(call.data)
-
-    if (!call.pagination.next_url) {
-      return callData
-    } else {
-      endpoint = call.pagination.next_url
-    }
-  }
-
-  return callData;
-}
-
-export function relatedHashtagsIg (req, res, next) {
+export function getRelatedHashtags (req, res, next) {
   const searchedHashtag = req.params.tag.toLowerCase() //to lower case because we later filter out the original hastag like this
-  const re = /[^a-zA-Z0-9_ÂÃÄÀÁÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ]/
+  const re = relatedHashtags.hashtagValidationFormat
 
   if (re.test(searchedHashtag) || searchedHashtag === '') {
     res.json( {
       searchedHashtag: searchedHashtag,
       data: []
     })
-
     // don't go any further if req has special chars or is blank
     return
   }
 
-  chainCallsToIgApi(searchedHashtag, 3)
+  relatedHashtags.chainApiCalls(searchedHashtag, 3)
   .then( (body) => {
-    return igHashtagCounts(body) 
+    return relatedHashtags.getTagCountsFromPosts(body) 
   })
   .then( (r) => {
-    return r
-      // remove all tags with less than 1 occurence
-      //.filter(o => o.count > 1)
-
-      // sort by count desc
-      .sort((a, b) => b.count - a.count)
-
-      // remove original tag
-      .filter(o => o.text !== searchedHashtag)
-
-      //remove tags with special characters
-      .filter(o => {
-        return !re.test(o.text)
-      })
-
-      //return first 50 results
-      .slice(0, 50)
-
-      // return in the form [{text: String, count: Int}, ...etc...]
-      .map(o => {
-        return { text: o.text, count: o.count }
-      })
-
+    return relatedHashtags.filterCounts(r, searchedHashtag)
   })
   .then( (r) => {
     return {searchedHashtag: searchedHashtag, data: r}
