@@ -17,7 +17,7 @@ export function testNeo4j (req, res, next) {
   db.cypher({
       query: 'CREATE (u:User {email: {email}}) RETURN u',
       params: {
-          email: req.params.tag.toLowerCase(),
+          email: 'default',
       },
   }, function (err, results) {
       if (err) throw err;
@@ -26,7 +26,6 @@ export function testNeo4j (req, res, next) {
           console.log('No user found.')
       } else {
           console.log(result)
-          res.send(result)
       }
   });
 
@@ -53,7 +52,6 @@ export async function getRelatedHashtags (req, res, next) {
   const filteredTagCounts = relatedHashtags.filterCounts(tagCounts, searchedHashtag)
 
   res.json(filteredTagCounts)
-
 };
 
 

@@ -7,7 +7,7 @@ require('dotenv').config()
 =            Instagram            =
 =================================*/
 
-export let relatedHashtags = {
+export const relatedHashtags = {
 
   hashtagValidationFormat: /[^a-zA-Z0-9_ÂÃÄÀÁÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ]/,
 
@@ -19,7 +19,7 @@ export let relatedHashtags = {
    * @returns {Array} 'data' array from response from endpoint
    *
    */
-  chainApiCalls: async function (searchedHashtag, numberOfApiCalls, accessToken = process.env.IG_DEFAULT_ACCESS_TOKEN) {
+  async chainApiCalls (searchedHashtag, numberOfApiCalls, accessToken = process.env.IG_DEFAULT_ACCESS_TOKEN) {
     let callData = []
     let endpoint = 'https://api.instagram.com/v1/tags/' + searchedHashtag + '/media/recent?access_token=' + accessToken
     const options = {
@@ -42,8 +42,6 @@ export let relatedHashtags = {
       }
     }
 
-    console.log(callData.length)
-
     return callData
   },
 
@@ -53,7 +51,7 @@ export let relatedHashtags = {
    * @returns {Array} Array of the form [{text: hashtagText, count: cnt}, ...]
    * 
    */
-  getTagCountsFromPosts: function (input) {
+  getTagCountsFromPosts (input) {
     var posts = input
     var counts = []
 
@@ -84,7 +82,7 @@ export let relatedHashtags = {
    * @returns {Array} Array of the form [{text: hashtagText, count: cnt}, ...] filtered out
    *
    */
-  filterCounts: function (r, searchedHashtag) {
+  filterCounts (r, searchedHashtag) {
     return r
       // remove all tags with less than 1 occurence
       //.filter(o => o.count > 1)
