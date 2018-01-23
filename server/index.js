@@ -3,6 +3,8 @@ import { Nuxt, Builder } from 'nuxt'
 
 import hb from './hb'
 
+require('dotenv').config()
+
 const app = express()
 const host = process.env.HOST || 'localhost'
 const port = process.env.PORT || 3000

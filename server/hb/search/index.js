@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { testNeo4j, getRelatedHashtags, searchTagIg, relatedHashtagsTwitter } from './controllers'
+import { testNeo4j, getRelatedHashtags } from './controllers'
+import asyncMiddleware from './../../utils/asyncMiddleware'
 
 const router = Router()
 
-require('dotenv').config()
 
 /*==============================
 =            routes            =
@@ -18,12 +18,13 @@ router.use(function (req, res, next) {
 })
 
 
-router.get('/search/twitter/:tag', relatedHashtagsTwitter)
-router.get('/search/ig/:tag', getRelatedHashtags)
+// router.get('/search/twitter/:tag', relatedHashtagsTwitter)
+// router.get('/search/ig/:tag', getRelatedHashtags)
 
-router.get('/search/:tag', getRelatedHashtags)
+// router.get('/search/:tag', getRelatedHashtags)
+router.get('/search/:tag', asyncMiddleware(getRelatedHashtagsAsync))
 
-router.get('/searchtag/:tag', searchTagIg)
+// router.get('/searchtag/:tag', searchTagIg)
 
 router.get('/testneo4j/:tag', testNeo4j)
 

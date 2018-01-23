@@ -1,6 +1,6 @@
-import * as rp from 'request-promise'
+import rp from 'request-promise'
 import { relatedHashtags, twitterHashtagCounts } from './modules'
-import * as neo4j from 'neo4j'
+import neo4j from 'neo4j'
 
 require('dotenv').config()
 
@@ -13,7 +13,7 @@ require('dotenv').config()
 var db = new neo4j.GraphDatabase(process.env.NEO4J_CONNECTION)
 
 export function testNeo4j (req, res, next) {
-  console.log(' ')
+
   db.cypher({
       query: 'CREATE (u:User {email: {email}}) RETURN u',
       params: {
@@ -32,13 +32,35 @@ export function testNeo4j (req, res, next) {
 
 };
 
-/*=========================================
+/*===============================================
 =            relatedHashtagsIg            =
-=========================================*/
+================================================*/
+export async function getRelatedHashtags (req, res, next) {
+  const searchedHashtag = req.params.tag.toLowerCase() //to lower case because we later filter out the original hastag like this
+  const re = relatedHashtags.hashtagValidationFormat
+
+  if (re.test(searchedHashtag) || searchedHashtag === '') {
+    res.json( {
+      searchedHashtag: searchedHashtag,
+      data: []
+    })
+    // don't go any further if req has special chars or is blank
+    return
+  }
+
+  const rawPosts = await relatedHashtags.chainApiCalls(searchedHashtag, 3)
+  const tagCounts = relatedHashtags.getTagCountsFromPosts(rawPosts)
+  const filteredTagCounts = relatedHashtags.filterCounts(tagCounts, searchedHashtag)
+
+  res.json(filteredTagCounts)
+
+};
 
 
-
-export function getRelatedHashtags (req, res, next) {
+/*==============================================================
+=            relatedHashtagsIg w promise method           =
+==============================================================*/
+export function getRelatedHashtagsPromise (req, res, next) {
   const searchedHashtag = req.params.tag.toLowerCase() //to lower case because we later filter out the original hastag like this
   const re = relatedHashtags.hashtagValidationFormat
 
