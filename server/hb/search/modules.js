@@ -102,11 +102,6 @@ export let relatedHashtags = {
 
       //return first 50 results
       .slice(0, 50)
-
-      // return in the form [{text: String, count: Int}, ...etc...]
-      .map(o => {
-        return { text: o.text, count: o.count }
-      })
   }
 
 }

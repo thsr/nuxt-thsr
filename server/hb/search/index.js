@@ -22,7 +22,7 @@ router.use(function (req, res, next) {
 // router.get('/search/ig/:tag', getRelatedHashtags)
 
 // router.get('/search/:tag', getRelatedHashtags)
-router.get('/search/:tag', asyncMiddleware(getRelatedHashtagsAsync))
+router.get('/search/:tag', asyncMiddleware(getRelatedHashtags))
 
 // router.get('/searchtag/:tag', searchTagIg)
 
