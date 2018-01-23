@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getRelatedHashtags, searchTagIg, relatedHashtagsTwitter } from './controllers'
+import { testNeo4j, getRelatedHashtags, searchTagIg, relatedHashtagsTwitter } from './controllers'
 
 const router = Router()
 
@@ -24,6 +24,8 @@ router.get('/search/ig/:tag', getRelatedHashtags)
 router.get('/search/:tag', getRelatedHashtags)
 
 router.get('/searchtag/:tag', searchTagIg)
+
+router.get('/testneo4j/:tag', testNeo4j)
 
 
 export default router

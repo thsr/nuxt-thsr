@@ -1,6 +1,7 @@
 import { findIndex } from 'lodash'
 import * as rp from 'request-promise'
 
+require('dotenv').config()
 
 /*=================================
 =            Instagram            =
