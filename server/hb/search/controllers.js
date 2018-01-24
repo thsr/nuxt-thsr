@@ -51,7 +51,7 @@ export async function getRelatedHashtags (req, res, next) {
   const tagCounts = relatedHashtags.getTagCountsFromPosts(rawPosts)
   const filteredTagCounts = relatedHashtags.filterCounts(tagCounts, searchedHashtag)
 
-  res.json(filteredTagCounts)
+  res.json({searchedHashtag: searchedHashtag, data: filteredTagCounts})
 };
 
 

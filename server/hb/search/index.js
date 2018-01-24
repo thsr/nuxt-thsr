@@ -20,7 +20,7 @@ router.use(function (req, res, next) {
 // router.get('/search/ig/:tag', getRelatedHashtags)
 
 // router.get('/search/:tag', getRelatedHashtags)
-router.get('/search/:tag', asyncMiddleware(getRelatedHashtags), testNeo4j)
+router.get('/search/:tag', asyncMiddleware(getRelatedHashtags))
 
 // router.get('/searchtag/:tag', searchTagIg)
 
