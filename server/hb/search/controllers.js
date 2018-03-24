@@ -1,6 +1,6 @@
 import rp from 'request-promise'
 import { relatedHashtags, twitterHashtagCounts } from './modules'
-import neo4j from 'neo4j'
+// import neo4j from 'neo4j'
 
 require('dotenv').config()
 
@@ -10,26 +10,26 @@ require('dotenv').config()
 /*=========================================
 =            testneo4j            =
 =========================================*/
-var db = new neo4j.GraphDatabase(process.env.NEO4J_CONNECTION)
+// var db = new neo4j.GraphDatabase(process.env.NEO4J_CONNECTION)
 
-export function testNeo4j (req, res, next) {
+// export function testNeo4j (req, res, next) {
 
-  db.cypher({
-      query: 'CREATE (u:User {email: {email}}) RETURN u',
-      params: {
-          email: 'default',
-      },
-  }, function (err, results) {
-      if (err) throw err;
-      var result = results[0];
-      if (!result) {
-          console.log('No user found.')
-      } else {
-          console.log(result)
-      }
-  });
+//   db.cypher({
+//       query: 'CREATE (u:User {email: {email}}) RETURN u',
+//       params: {
+//           email: 'default',
+//       },
+//   }, function (err, results) {
+//       if (err) throw err;
+//       var result = results[0];
+//       if (!result) {
+//           console.log('No user found.')
+//       } else {
+//           console.log(result)
+//       }
+//   });
 
-};
+// };
 
 /*===============================================
 =            relatedHashtagsIg            =

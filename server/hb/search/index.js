@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { testNeo4j, getRelatedHashtags } from './controllers'
+import { getRelatedHashtags } from './controllers'
 import asyncMiddleware from './../../utils/asyncMiddleware'
 
 const router = Router()
@@ -24,7 +24,7 @@ router.get('/search/:tag', asyncMiddleware(getRelatedHashtags))
 
 // router.get('/searchtag/:tag', searchTagIg)
 
-router.get('/testneo4j/:tag', testNeo4j)
+//router.get('/testneo4j/:tag', testNeo4j)
 
 
 export default router
