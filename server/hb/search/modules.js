@@ -21,7 +21,7 @@ export const relatedHashtags = {
    */
   async chainApiCalls (searchedHashtag, numberOfApiCalls, accessToken = process.env.IG_DEFAULT_ACCESS_TOKEN) {
     let callData = []
-    let endpoint = 'https://api.instagram.com/v1/tags/' + searchedHashtag + '/media/recent?access_token=' + accessToken
+    let endpoint = 'https://api.instagram.com/v1/tags/' + encodeURI(searchedHashtag) + '/media/recent?access_token=' + accessToken
     const options = {
         qs: { count: 30 },
         method: 'GET',
