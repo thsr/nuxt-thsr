@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getRelatedHashtags } from './controllers'
+import { getRelatedHashtags, searchTagIg } from './controllers'
 import asyncMiddleware from './../../utils/asyncMiddleware'
 
 const router = Router()
@@ -22,7 +22,7 @@ router.use(function (req, res, next) {
 // router.get('/search/:tag', getRelatedHashtags)
 router.get('/search/:tag', asyncMiddleware(getRelatedHashtags))
 
-// router.get('/searchtag/:tag', searchTagIg)
+router.get('/searchtag/:tag', searchTagIg)
 
 //router.get('/testneo4j/:tag', testNeo4j)
 
